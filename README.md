@@ -1,1 +1,1 @@
-# GeneratorEwidencjiLekarzyStazystow
+# Generator Ewidencji Lekarzy Stazystow
