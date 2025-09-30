@@ -1,0 +1,346 @@
+body { 
+    font-family: Arial, sans-serif; 
+    padding: 20px; 
+    background-color: #f0f0f0;
+}
+
+.ui-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 30px auto; /* Dodano margines na dole */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-sizing: border-box;
+    /* Usunięto text-align: center; */
+}
+
+/* === STYLE DLA NOTATKI O PRYWATNOŚCI === */
+.privacy-notice {
+    background-color: #e6f7ff; /* Jasnoniebieskie tło */
+    border-left: 5px solid #007bff; /* Niebieska krawędź akcentująca */
+    padding: 15px 20px;
+    margin-bottom: 25px; /* Odstęp od kontrolek poniżej */
+    border-radius: 5px;
+    text-align: left; /* Wyrównanie do lewej dla lepszej czytelności */
+}
+
+.privacy-notice p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.privacy-notice strong {
+    color: #0056b3; /* Ciemniejszy niebieski dla nagłówka */
+}
+
+
+.ui-container h2 {
+    text-align: center;
+}
+
+.controls-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 30px;
+    flex-wrap: wrap;
+    text-align: left;
+    margin-top: 10px; /* Odstęp od nagłówka */
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.control-group:last-child {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-group button {
+    margin-top: 0;
+}
+
+.month-selector {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.month-selector input { flex-grow: 1; }
+.month-selector button { padding: 5px 10px; font-size: 18px; line-height: 1; margin-top: 0; }
+
+.tables-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    width: 100%;
+}
+
+.table-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-wrapper h2 {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* === STYLE BAZOWE DLA OBU ARKUSZY === */
+.szablon-base {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 15mm;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 9pt;
+    color: #000;
+    flex-shrink: 0;
+}
+.szablon-base h1 { font-size: 12pt; font-weight: bold; text-align: center; margin: 15px 0; }
+.szablon-base p { margin: 2px 0; font-size: 10pt; }
+.szablon-base .header-text { display: flex; justify-content: space-between; font-size: 8pt; }
+.szablon-base .signature-line { display: block; text-align: right; margin-top: 30px; }
+.szablon-base .signature-line span { font-size: 8pt; padding-top: 2px; }
+.szablon-base .footer-codes { margin-top: 10px; font-size: 8pt; }
+.szablon-base .footer-codes p { margin: 4px 0; font-size: 8pt; }
+.szablon-base .footer-codes strong { text-decoration: underline; }
+.szablon-base .footer-codes .code { font-weight: bold; }
+
+/* === STYLE TABELI (WSPÓLNE DLA OBU) === */
+.ewidencja-table { width: 100%; border-collapse: collapse; margin-top: 15px; text-align: center; }
+.ewidencja-table thead th { border: 1px solid #000; font-weight: normal; vertical-align: middle; padding: 2px; font-size: 7pt; }
+.ewidencja-table thead tr:nth-child(2) th { background-color: #d9d9d9; }
+.ewidencja-table tbody td, .ewidencja-table tfoot td { border: 1px solid #000; padding: 4px; vertical-align: middle; height: 14.6pt; background-color: #f2f2f2; font-size: 8pt; }
+.ewidencja-table tbody td:first-child, .ewidencja-table tfoot td:first-child { background-color: #fff; font-weight: normal; }
+.ewidencja-table tfoot td:first-child { font-weight: bold; }
+
+/* === STYLE INTERAKTYWNE (TYLKO DLA FORMULARZA) === */
+#formularz-edycji td[contenteditable="true"] {
+    cursor: text;
+    background-color: #f2f8ff !important;
+}
+#formularz-edycji td[contenteditable="true"]:focus {
+    outline: 2px solid #007bff;
+    outline-offset: -2px;
+}
+
+/* === STYLE WARUNKOWE (DLA OBU ARKUSZY) === */
+.day-disabled td, .day-disabled td:first-child {
+    background-color: #f0f0f0 !important;
+    color: #aaa !important;
+    text-decoration: line-through;
+    position: relative;
+    overflow: hidden;
+}
+.day-disabled td::before {
+    content: ''; position: absolute; top: 50%; left: -10%;
+    width: 120%; height: 1px; background-color: #bbb;
+    transform: rotate(-45deg);
+}
+#formularz-edycji .weekend-row td, 
+#formularz-edycji .weekend-row td:first-child {
+    background-color: #f7f7f7 !important;
+    color: #888;
+    background-image: linear-gradient(45deg, #f7f7f7 25%, #ececec 25%, #ececec 50%, #f7f7f7 50%, #f7f7f7 75%, #ececec 75%, #ececec 100%);
+    background-size: 8px 8px;
+}
+.cell-locked { pointer-events: none; user-select: none; }
+
+/* === IKONKA INFORMACYJNA I TOOLTIP === */
+.info-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 24px;
+    font-weight: bold;
+    cursor: help;
+    position: relative;
+}
+.info-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s;
+}
+.info-icon:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* === POPRAWKI KOLORÓW I BLOKAD (DLA OBU ARKUSZY) === */
+#kod-pracy-placeholder { background-color: #fff !important; }
+.ewidencja-table tbody td:nth-child(3), .ewidencja-table tbody td:nth-child(4),
+.ewidencja-table tbody td:nth-child(6), .ewidencja-table tbody td:nth-child(7),
+.ewidencja-table tfoot td:nth-child(3), .ewidencja-table tfoot td:nth-child(4),
+.ewidencja-table tfoot td:nth-child(6), .ewidencja-table tfoot td:nth-child(7) {
+    background-color: #fff !important;
+}
+.ewidencja-table thead tr:nth-child(2) th:nth-child(2),
+.ewidencja-table thead tr:nth-child(2) th:nth-child(3),
+.ewidencja-table thead tr:nth-child(2) th:nth-child(5),
+.ewidencja-table thead tr:nth-child(2) th:nth-child(6) {
+    background-color: #fff !important;
+}
+#formularz-edycji .ewidencja-table tbody td:nth-child(8), 
+#formularz-edycji .ewidencja-table tbody td:nth-child(9),
+#formularz-edycji .ewidencja-table tbody td:nth-child(10), 
+#formularz-edycji .ewidencja-table tfoot td:nth-child(8),
+#formularz-edycji .ewidencja-table tfoot td:nth-child(9), 
+#formularz-edycji .ewidencja-table tfoot td:nth-child(10) {
+    background-color: #f7f7f7 !important;
+    background-image: linear-gradient(45deg, #f7f7f7 25%, #ececec 25%, #ececec 50%, #f7f7f7 50%, #f7f7f7 75%, #ececec 75%, #ececec 100%);
+    background-size: 8px 8px;
+    pointer-events: none;
+    user-select: none;
+}
+button { font-size: 16px; padding: 10px 20px; margin-top: 20px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; }
+button:hover { background-color: #0056b3; }
+
+
+/* NOWE STYLE - KOMUNIKAT O BŁĘDZIE */
+#warning-message {
+    background-color: #d9534f; /* Czerwony kolor ostrzegawczy */
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: none; /* Domyślnie ukryty */
+}
+
+/* NOWE STYLE: Główny nagłówek */
+.main-header {
+    background-color: #343a40;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.main-header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* NOWE STYLE: Pole z wyjaśnieniem */
+.explanation-box {
+    background-color: #e9ecef;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 0 4px 4px 0;
+    text-align: left;
+}
+
+.explanation-box h4 {
+    margin: 0 0 5px 0;
+    font-size: 16px;
+}
+
+.explanation-box p {
+    margin: 0;
+    font-size: 14px;
+    color: #495057;
+}
+
+/* NOWE STYLE: Przyciski masowego wypełniania */
+.fill-buttons-group {
+    display: flex;
+    gap: 10px;
+}
+.fill-btn {
+    font-size: 14px;
+    padding: 8px 12px;
+    margin: 0;
+    background-color: #6c757d; /* Szary kolor */
+}
+.fill-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Poprawka dla grupy z przyciskiem PDF */
+.control-group:last-of-type { /* Używamy last-of-type dla większej precyzji */
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+/* NOWE STYLE: Lista w polu wyjaśnienia */
+.explanation-box ul {
+    padding-left: 20px;
+    margin: 10px 0 0 0;
+}
+
+.explanation-box li {
+    margin-bottom: 5px;
+}
+
+/* NOWE STYLE: Przycisk czyszczenia danych */
+.btn-danger {
+    background-color: #d9534f; /* Czerwony */
+    border-color: #d43f3a;
+}
+.btn-danger:hover {
+    background-color: #c9302c;
+}
+
+/* NOWE STYLE: Przeniesiona sekcja "Generuj PDF" */
+.final-action-wrapper {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ZMODYFIKOWANE STYLE: Rozwijany panel z wyjaśnieniami */
+.explanation-box {
+    background-color: #e9ecef;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 0 4px 4px 0;
+}
+.explanation-box summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+}
+.explanation-box p, .explanation-box ul {
+    margin-top: 10px;
+}
