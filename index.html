@@ -2,13 +2,14 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generator Ewidencji Czasu Pracy</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
- <header class="main-header">
+ <div id="app-container"><header class="main-header">
         <h1>Generator Ewidencji Czasu Pracy Lekarza Stażysty</h1>
     </header>
 
@@ -18,7 +19,7 @@
 
 <div class="ui-container">
     <div class="privacy-notice">
-        <p>🔒 <strong>Twoje dane są bezpieczne.</strong> Wszystkie informacje, które wprowadzasz, są przetwarzane wyłącznie w Twojej przeglądarce i nigdzie nie są wysyłane. Ta strona nie używa żadnych mechanizmów śledzących ani analitycznych.</p>
+        <p>🔒 <strong>Twoje dane są bezpieczne.</strong> Wszystkie informacje, które wprowadzasz, są przetwarzane wyłącznie w Twojej przeglądarce,tylko na Twoim komputerze i nigdzie nie są wysyłane. Ta strona nie używa żadnych mechanizmów śledzących ani analitycznych.</p>
     </div>
 
     <h2>Wypełnij dane</h2>
@@ -55,11 +56,16 @@
             Aplikacja posiada kilka funkcji, które przyspieszają wypełnianie ewidencji. <strong>Wszystkie automatycznie wstawione dane możesz później ręcznie edytować.</strong>
         </p>
         <ul>
-            <li><strong>Godziny pracy:</strong> Po wpisaniu kodu <strong>1A</strong> lub <strong>SZ</strong>, godziny pracy (<code>7:30-15:05</code>) oraz ich liczba (<code>7h 35'</code>) zostaną uzupełnione automatycznie.</li>
-            <li><strong>Godziny dyżuru:</strong> Po wpisaniu kodu dyżuru <strong>D</strong>, godziny oraz ich liczba zostaną wstawione automatycznie, w zależności od dnia tygodnia.</li>
+            <li><strong>Automatyczny wybór miesiąca:</strong> Do 5. dnia każdego miesiąca generator domyślnie ustawia ewidencję za miesiąc poprzedni. Od 6. dnia miesiąca domyślnie ustawiany jest miesiąc bieżący.</li>
+            <li><strong>Automatyczne wielkie litery:</strong> Wpisane kody (np. "1a", "d", "uut") zostaną automatycznie zamienione na wielkie litery.</li>
+            <li><strong>Szybkie wstawianie dyżuru:</strong> Kliknięcie w komórkę <strong>KOD DYŻURU</strong> wstawia lub usuwa kod <strong>D</strong>.</li>
+            <li><strong>Godziny pracy i dyżuru:</strong> Wpisanie kodu <strong>1A</strong>, <strong>SZ</strong> lub <strong>D</strong> automatycznie uzupełnia godziny pracy oraz ich wymiar. Wpisane dane można zmienić ręcznie.</li>
+            <li><strong>Logika dyżurów 5-godzinnych:</strong> W celu równego rozłożenia czasu, krótsze dyżury (w dni robocze niepoprzedzające dnia wolnego) są naprzemiennie ustawiane jako <strong>5h 5'</strong> i <strong>5h</strong>, zawsze zaczynając od dłuższej wersji.</li>
+            <li><strong>Wydłużony dyżur przed dniem wolnym:</strong> Jeśli dzień następujący po dyżurze jest dniem wolnym (np. weekend, urlop), dyżur jest automatycznie wydłużany do 10h 5'. Funkcja nie działa, jeśli kolejny dzień to nieobecność typu ZL4, ZP, ZN lub IN.</li>
+            <li><strong>Blokowanie wierszy:</strong> Wpisanie kodu nieobecności (np. <strong>UUT</strong>, <strong>ZL4</strong>) automatycznie czyści i blokuje resztę wiersza.</li>
             <li><strong>Sumowanie godzin:</strong> Suma godzin dyżuru w wierszu <strong>Razem</strong> jest obliczana na bieżąco.</li>
-            <li><strong>Ostrzeżenie o limicie:</strong> Jeśli suma godzin dyżuru przekroczy <strong>40h 20'</strong>, na górze strony pojawi się czerwony komunikat.</li>
-            <li><strong>Weekendy:</strong> Soboty i niedziele są automatycznie oznaczane jako dni wolne (<code>W5</code> / <code>-</code>), a ich wiersze są zablokowane.</li>
+            <li><strong>Weekendy:</strong> Soboty i niedziele są automatycznie oznaczane jako dni wolne (<code>W5</code> / <code>-</code>) i blokowane.</li>
+            <li><strong>Ostrzeżenie o limicie:</strong> Jeśli suma godzin dyżuru przekroczy <strong>40h 20'</strong>, na górze strony pojawi się czerwony komunikat oraz jednorazowy alert.</li>
         </ul>
     </details>
 
@@ -194,6 +200,13 @@
             </div>
         </div>
 
+    </div>
+    <div id="size-warning-overlay" class="hidden">
+            <div id="size-warning-popup">
+                <h2>Dopasowanie ekranu</h2>
+                <p id="size-warning-message">Dla lepszego dopasowania, widok został automatycznie przeskalowany. Aby korzystać z pełnego rozmiaru, zalecamy ekran o szerokości powyżej 1600px.</p>
+                <button id="close-size-warning">Rozumiem, kontynuuj</button>
+            </div>
     </div>
     
     <script src="script.js"></script>
