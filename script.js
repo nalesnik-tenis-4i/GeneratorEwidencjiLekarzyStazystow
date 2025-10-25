@@ -114,6 +114,15 @@ function setupSynchronization() {
 }
 
 function recalculateAllDuties() {
+    // Pobieramy aktualnie wybrany miesiąc i rok z pola input, aby móc pracować na datach
+    const miesiacInput = document.getElementById('miesiacInput').value.toLowerCase();
+    const parts = miesiacInput.split(' ');
+    if (parts.length < 2) return;
+    const monthName = parts[0];
+    const year = parseInt(parts[1], 10);
+    if (!polishMonths.hasOwnProperty(monthName) || isNaN(year)) return;
+    const monthIndex = polishMonths[monthName];
+
     const shortDutyCells = [];
 
     // Krok 1: Przejdź przez cały miesiąc i ustaw długie dyżury oraz wyczyść komórki
@@ -129,14 +138,28 @@ function recalculateAllDuties() {
         const previewIloscGodzinCell = previewRow.cells[6];
 
         if (dutyCode === 'D') {
-            const nextDayRow = document.getElementById(`form-day-row-${i + 1}`);
             let isNextDayOff = false;
+
+            // SPRAWDZENIE 1: Logika oparta na kodzie w następnym wierszu tabeli (dla urlopów itp.)
+            const nextDayRow = document.getElementById(`form-day-row-${i + 1}`);
             if (nextDayRow && !nextDayRow.classList.contains('day-disabled')) {
                 const nextDayCode = nextDayRow.cells[1].innerText.trim().toUpperCase();
                 const dayOffTriggerCodes = new Set(['UUT', 'UM', 'UR', 'UW', 'UO', 'SW', 'WN', 'NZD', 'CW', 'OK', 'W5', 'WZN', 'WZŚ', '-']);
                 if (dayOffTriggerCodes.has(nextDayCode)) {
                     isNextDayOff = true;
                 }
+            }
+
+            // SPRAWDZENIE 2: Logika oparta na dacie kalendarzowej (kluczowe dla końca miesiąca)
+            // Tworzymy datę dla bieżącego dnia pętli
+            const currentDate = new Date(year, monthIndex, i);
+            // Tworzymy datę dla następnego dnia
+            const nextCalendarDay = new Date(currentDate);
+            nextCalendarDay.setDate(currentDate.getDate() + 1);
+            
+            const nextDayOfWeek = nextCalendarDay.getDay(); // 0 = Niedziela, 6 = Sobota
+            if (nextDayOfWeek === 0 || nextDayOfWeek === 6) {
+                isNextDayOff = true;
             }
 
             if (isNextDayOff) {
@@ -240,7 +263,9 @@ function updateCalendarView() {
             });
         }
     }
-
+    
+    // Po każdej aktualizacji widoku kalendarza, przelicz dyżury
+    recalculateAllDuties();
     calculateAndDisplayTotals();
 }
 
@@ -346,7 +371,9 @@ function setupFillButtons() {
                     handleAbsenceCode(cell);
                 }
             });
-
+            
+            // Po masowym wypełnieniu, przelicz dyżury
+            recalculateAllDuties();
             calculateAndDisplayTotals();
         });
     });
@@ -417,7 +444,8 @@ function setupClearButton() {
         
         if (isConfirmed) {
             document.getElementById('imieNazwiskoInput').value = '';
-            aktualizujWszystko();
+            // Reset do domyślnego miesiąca zamiast czyszczenia
+            initializeMonth(); 
             
             sessionAlertShown = false;
             console.log("Dane zostały wyczyszczone, a alert o limicie godzin zresetowany.");
